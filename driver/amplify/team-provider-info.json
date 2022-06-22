@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ubeats-staging-75927-authRole",
+      "UnauthRoleArn": "arn:aws:iam::961996260126:role/amplify-ubeats-staging-75927-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::961996260126:role/amplify-ubeats-staging-75927-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-ubeats-staging-75927-deployment",
+      "UnauthRoleName": "amplify-ubeats-staging-75927-unauthRole",
+      "StackName": "amplify-ubeats-staging-75927",
+      "StackId": "arn:aws:cloudformation:us-east-1:961996260126:stack/amplify-ubeats-staging-75927/41e045d0-e3dc-11ec-82f7-12c89988780b",
+      "AmplifyAppId": "dmhv0fd7ze6x3"
+    },
+    "categories": {
+      "auth": {
+        "ubeats": {}
+      }
+    }
+  }
+}
