@@ -31,33 +31,51 @@ const OrderContextProvider =({children})=>{
 
     }
 
-    const acceptOrder = () =>{
+    useEffect(()=>{
+      if(!order){
+        return;
+      }
+      const subscription = DataStore.observe(Order,order.id).subscribe(({opType, element}) =>{
+        if(opType === "UPDATE"){
+          // console.log("Order has been updated", element)
+          // setOrder((existingOrder)=> ({...existingOrder, ...element}))
+          fetchOrder(element.id)
+        }
+      })
+      return ()=> subscription.unsubscribe()
+    },[order?.id])
+
+    const acceptOrder = async() =>{
      //update the order, and change status and assign driver
-      DataStore.save(
+      const updatedOrder = await DataStore.save(
         Order.copyOf(order,(updated)=>{
             updated.status = "ACCEPTED";//update to accepted
             updated.Courier = dbCourier;
         })
-      ).then(setOrder)
+      )
+      console.log(updatedOrder)
+      setOrder(updatedOrder);
     }
 
-    const pickUpOrder = () =>{
+    const pickUpOrder = async() =>{
         //update the order, and change status and assign driver
-         DataStore.save(
+         const updatedOrder =  await DataStore.save(
            Order.copyOf(order,(updated)=>{
                updated.status = "PICKED_UP";//update to accepted
            })
-         ).then(setOrder)
+         )
+         setOrder(updatedOrder)
        }
 
-       const completeOrder = () =>{
+       const completeOrder = async() =>{
         //update the order, and change status and assign driver
-         DataStore.save(
+        const updatedOrder = await DataStore.save(
            Order.copyOf(order,(updated)=>{
                updated.status = "COMPLETED";//update to accepted
                updated.Courier = dbCourier;
            })
-         ).then(setOrder)
+         )
+         setOrder(updatedOrder)
        }
      return(
         <OrderContext.Provider value={{acceptOrder, order,user, dishes, fetchOrder,pickUpOrder, completeOrder }}>
