@@ -18,8 +18,11 @@ const Basket= () => {
   const navigation = useNavigation()
 
   const onCreateOrder= async()=>{
-    await createOrder();
-    naivigation.goBack()
+    const newOrder = await createOrder();
+    navigation.navigate("OrdersTab", {
+      screen:"Order",
+      params:{id: newOrder.id}
+    })
   }
   return (
     <View style={styles.page}>

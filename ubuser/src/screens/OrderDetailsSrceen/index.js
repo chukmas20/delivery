@@ -10,13 +10,11 @@ import styles from "./styles";
 // const order = orders[0]
 
 
-const OrderDetails =()=>{
+const OrderDetails =({id})=>{
     const {getOrder} = useOrderContext()
     const [order, setOrder] = useState()
     const [orderDishItems, setOrderDishItem] = useState()
-    const route = useRoute()
     
-    const id = route.params?.id
 
     useEffect(()=>{
        getOrder(id).then(setOrder)

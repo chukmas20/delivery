@@ -10,6 +10,7 @@ import Basket from '../screens/Basket';
 import OrdersScreen from '../screens/OrdersScreen';
 import Profile from '../screens/ProfileScreen';
 import { useAuthContext } from '../context/AuthContext';
+import OrderDetailsNavigation from './OrderDetailsNavigation';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +42,7 @@ const HomeTabs =()=> {
       <Tab.Screen name="Home" component={HomeStackNavigator}
        options={{tabBarIcon:({color})=> <Foundation name="home" size={24} color={color}/>}} 
        />
-      <Tab.Screen name="Orders" component={OrderStackNavigator} 
+      <Tab.Screen name="OrdersTab" component={OrderStackNavigator} 
          options={{tabBarIcon:({color})=> <FontAwesome5 name="first-order-alt" size={24} color={color} />}}  
          />
       <Tab.Screen name="Profile" component={Profile}
@@ -75,7 +76,7 @@ const OrderStackNavigator = ()=>{
     return(
       <OrdersStack.Navigator>
        <HomeStack.Screen name="Orders"  component={OrdersScreen}/>
-       <HomeStack.Screen name="Order"  component={OrderDetails}/>
+       <HomeStack.Screen name="Order"  component={OrderDetailsNavigation}/>
        
      </OrdersStack.Navigator>
     )

@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "ubeats",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-0adfbbc9-a28a-4195-bc74-cdd85f0ad207/amplify/backend/api/ubeats/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-3dbf6399-a43f-4422-996b-f47319e3b943/amplify/backend/api/ubeats/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
       "keyDescription": "api key description",
