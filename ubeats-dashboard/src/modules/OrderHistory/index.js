@@ -1,42 +1,82 @@
 import { Card, Table, Tag } from 'antd';
-import React from 'react'
-import ordersHistory from "../../assets/data/orders-history.json";
+import { DataStore } from 'aws-amplify';
+import React, { useEffect, useState } from 'react'
+// import ordersHistory from "../../assets/data/orders-history.json";
+import { useRestaurantContext } from '../../contexts/RestaurantContext';
+import { Order, OrderStatus } from '../../models';
+import { useNavigate } from "react-router-dom";
+
 
 
 const OrderHistory = () => {
+   const [orders, setOrders] = useState([])
+   const {restaurant} = useRestaurantContext()
 
-     const tableColumns = [
-        {
-           title:"Order ID",
-           dataIndex:"orderID",
-           key: "orderID",
-        },
-        {
-            title:"Delivery Address",
-            dataIndex:"deliveryAddress",
-            key: "deliveryAddress",
-         },
-         {
-            title:"Price",
-            dataIndex:"price",
-            key: "price",
-            render:(price)=> `${price} ₦`
-         },
-         {
-            title:"Status",
-            dataIndex:"status",
-            key: "status",
-            render:(status)=> <Tag color={status ==="Delivered" ? "green":"red"}>{status}</Tag>
-         },
-    ]
+   const navigate = useNavigate();
+
+
+   useEffect(() => {
+      if (!restaurant) {
+        return;
+      }
+      DataStore.query(Order, (order) =>
+        order
+          .orderRestaurantId("eq", restaurant.id)
+          .or((orderStatus) =>
+            orderStatus
+              .status("eq", "PICKED_UP")
+              .status("eq", "COMPLETED")
+              .status("eq", "DECLINED_BY_RESTAURANT")
+          )
+      ).then(setOrders);
+    }, [restaurant]);
+
+    const renderOrderStatus = (orderStatus) => {
+      const statusToColor = {
+        [OrderStatus.PICKED_UP]: "orange",
+        [OrderStatus.COMPLETED]: "green",
+        [OrderStatus.DECLINED_BY_RESTAURANT]: "red",
+      };
+  
+      return <Tag color={statusToColor[orderStatus]}>{orderStatus}</Tag>;
+    };
+
+
+    const tableColumns = [
+      {
+        title: "Order ID",
+        dataIndex: "id",
+        key: "id",
+      },
+      {
+        title: "Created at",
+        dataIndex: "createdAt",
+        key: "createdAt",
+      },
+      {
+        title: "Price",
+        dataIndex: "total",
+        key: "total",
+        render: (price) => `${price?.toFixed(2) ?? 0} ₦`,
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        render: renderOrderStatus,
+      },
+    ];
   return (
-    <Card title={"Orders History"} style={{margin: 20}}>
-    <Table  
-       dataSource={ordersHistory}
-       columns={tableColumns}
-       rowKey="orderID"
-    />
- </Card>
+      <Card title={"Orders History"} style={{ margin: 20 }}>
+      <Table
+         dataSource={orders}
+         columns={tableColumns}
+         rowKey="id"
+         onRow={(orderItem) => ({
+         onClick: () => navigate(`/order/${orderItem.id}`),
+      })}
+      />
+   </Card>
   )
 }
 
