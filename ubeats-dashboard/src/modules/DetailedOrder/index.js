@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {Card, Descriptions, Divider,List, Button, Tag, Spin} from "antd";
-import dishes from "../../assets/data/dishes";
+// import dishes from "../../assets/data/dishes";
 import { useParams } from 'react-router-dom';
 import { DataStore } from 'aws-amplify';
 import { Order, OrderDish, OrderStatus, User } from '../../models';

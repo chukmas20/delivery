@@ -1,28 +1,59 @@
-import { Button, Card, Table } from 'antd'
-import React from 'react';
+import { Button, Card, Popconfirm, Table } from 'antd'
+import { DataStore } from 'aws-amplify';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import dishes from "../../assets/data/dishes";
+// import dishes from "../../assets/data/dishes";
+import { useRestaurantContext } from '../../contexts/RestaurantContext';
+import { Dish } from '../../models';
 
 
 const RestaurantMenu = () => {
-    const tableColumns =[
-       {
-        title:"Menu Item",
-        dataIndex: "name",
-        key:"name"
-       },
-       {
-        title:"Price",
-        dataIndex: "price",
-        key:"price",
-        render:(price)=> `${price} ₦`
-       },
-       {
-        title:"Action",
-        key:"action",
-        render:()=> <Button danger>Remove</Button>
-       },
-    ];
+  const [dishes, setDishes] = useState([]);
+  const { restaurant } = useRestaurantContext();
+
+  useEffect(() => {
+    if (restaurant?.id) {
+      DataStore.query(Dish, (c) => c.restaurantID("eq", restaurant.id)).then(
+        setDishes
+      );
+    }
+  }, [restaurant?.id]);
+
+  const deleteDish = (dish) => {
+    DataStore.delete(dish);
+    setDishes(dishes.filter((d) => d.id !== dish.id));
+  };
+
+  console.log(dishes)
+
+  const tableColumns = [
+    {
+      title: "Menu Item",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (price) => `${price} ₦`,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, item) => (
+        <Popconfirm
+          placement="topLeft"
+          title={"Are you sure you want to delete this dish?"}
+          onConfirm={() => deleteDish(item)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button danger>Remove</Button>
+        </Popconfirm>
+      ),
+    },
+  ];
 
     const renderNewItemButton =()=>(
         <Link to={"create"}>
